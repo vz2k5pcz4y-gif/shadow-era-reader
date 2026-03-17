@@ -55,28 +55,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;backg
 <div class="vw" id="vw"><div class="ct" id="ct"></div></div>
 <div class="bnav" id="bnav"><button id="pb">← 上一章</button><button id="tc">目录</button><button id="nx">下一章 →</button></div>
 <script>
-var chapters={
-};
+var chapters={"1":{"t":"第1章：夜语领地的少年","c":"## 噩梦\n\n\"滚开……别过来……\"\n\n黑暗中，无数双眼睛在注视着他。\n\n那不是人类眼睛，而是燃烧着苍白火焰的深渊之瞳。它们从四面八方汇聚而来，像潮水般将他淹没。少年想要逃跑，却发现双脚像是扎根在了原地，动弹不得。\n\n\"你逃不掉的……\"\n\n一个苍老的声音在耳边响起，带着无尽的贪婪和渴望。\n\n\"你的血脉，你的灵魂，都将是我的……\"\n\n少年拼命挣扎，却无济于事。那些眼睛越聚越多，将他牢牢困在中央。\n\n\"不——\""],"2":{"t":"第2章：血脉觉醒","c":"第2章内容"},"3":{"t":"第3章：新的开始","c":"第3章内容"},"4":{"t":"第4章：挑战","c":"第4章内容"},"5":{"t":"第5章：成长","c":"第5章内容"}};
 </script>
 <script>
-// Load chapters
-fetch('chapters.txt').then(r=>r.text()).then(t=>{try{var d=JSON.parse(t);chapters=d;init();}catch(e){document.getElementById('ct').innerHTML='加载章节失败'+e}});
 var pw='shadow2026',cur=1,rd=JSON.parse(localStorage.getItem('r')||'[]'),lg=document.getElementById('lg'),hdr=document.getElementById('hdr'),pr=document.getElementById('pr'),lst=document.getElementById('lst'),vw=document.getElementById('vw'),ct=document.getElementById('ct'),ht=document.getElementById('ht'),bk=document.getElementById('bk'),pb=document.getElementById('pb'),nx=document.getElementById('nx'),tc=document.getElementById('tc'),bnav=document.getElementById('bnav'),ft=document.getElementById('ft'),men=document.getElementById('men'),pf=document.getElementById('pf');
 if(localStorage.getItem('a')===pw){lg.classList.add('on');hdr.style.display='flex';pr.style.display='block';init()}
 document.getElementById('btn').onclick=function(){if(document.getElementById('pwd').value===pw){localStorage.setItem('a',pw);lg.classList.add('on');hdr.style.display='flex';pr.style.display='block';init()}else{document.getElementById('err').style.display='block'}};
 document.getElementById('pwd').onkeypress=function(e){if(e.key==='Enter')document.getElementById('btn').click()};
 function init(){
 lst.innerHTML=Object.keys(chapters).map(k=>'<div class="itm" data-n="'+k+'"><div class="nm">第'+k+'章</div><div class="tt">'+(chapters[k].t||'')+'</div></div>').join('');
-lst.querySelectorAll('.itm').forEach(i=>i.onclick=function(){load(parseInt(this.getAttribute('data-n')))});
-update()
-}
+lst.querySelectorAll('.itm').forEach(i=>i.onclick=function(){load(parseInt(this.getAttribute('data-n')))})}
 function load(n){
 if(n<1||n>Object.keys(chapters).length)return;
 cur=n;localStorage.setItem('c',n);
 if(rd.indexOf(n)===-1){rd.push(n);rd.sort((a,b)=>a-b);localStorage.setItem('r',JSON.stringify(rd));update()}
 ct.innerHTML='<h1>'+(chapters[n].t||'第'+n+'章')+'</h1>'+(chapters[n].c||'').split('\n\n').map(p=>p.trim()?'<p>'+p.trim()+'</p>':'').join('');
-ht.textContent='第'+n+'章';bk.style.display='block';bnav.style.display='flex';lst.classList.add('on');vw.classList.add('on');pb.disabled=n<=1;nx.disabled=n>=Object.keys(chapters).length;pf.style.width=(cur/Object.keys(chapters).length*100)+'%';window.scrollTo(0,0)
-}
+ht.textContent='第'+n+'章';bk.style.display='block';bnav.style.display='flex';lst.classList.add('on');vw.classList.add('on');pb.disabled=n<=1;nx.disabled=n>=Object.keys(chapters).length;pf.style.width=(cur/Object.keys(chapters).length*100)+'%';window.scrollTo(0,0)}
 function update(){pf.style.width=(cur/Object.keys(chapters).length*100)+'%'}
 bk.onclick=function(){lst.classList.remove('on');vw.classList.remove('on');bk.style.display='none';bnav.style.display='none';ht.textContent='阴影纪元'};
 pb.onclick=function(){load(cur-1)};nx.onclick=function(){load(cur+1)};tc.onclick=function(){lst.classList.remove('on');vw.classList.remove('on');bk.style.display='none';bnav.style.display='none';ht.textContent='阴影纪元'};
