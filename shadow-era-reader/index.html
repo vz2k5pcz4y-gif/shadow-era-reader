@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>阴影纪元 - 阅读器</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Microsoft YaHei",sans-serif;background:#1a1a2e;color:#eee;min-height:100vh}
+#hdr{display:none;padding:15px;background:#16213e;justify-content:space-between;align-items:center;border-bottom:1px solid #0f3460}
+#hdr h1{font-size:1.3rem;color:#e94560}
+#hdr button{background:#e94560;color:#fff;border:none;padding:8px 15px;border-radius:5px;cursor:pointer}
+#ct{padding:20px;max-width:800px;margin:0 auto;display:none;line-height:1.8}
+#ct h3{color:#e94560;font-size:1.5rem;margin-bottom:15px;text-align:center}
+#ct p{text-indent:2em;margin-bottom:12px}
+#bnav{display:none;justify-content:center;gap:20px;padding:15px;background:#16213e}
+#bnav button{background:#0f3460;color:#fff;border:none;padding:10px 25px;border-radius:5px;cursor:pointer}
+#bnav button:disabled{opacity:0.5;cursor:not-allowed}
+#lst{display:none;padding:20px;max-width:600px;margin:0 auto}
+.ch{padding:12px;margin:5px 0;background:#16213e;border-radius:8px;cursor:pointer;transition:background 0.2s}
+.ch:hover{background:#0f3460}
+#pwd{width:80%;padding:10px;margin:10px 0;border-radius:5px;border:1px solid #0f3460;background:#16213e;color:#fff}
+#btn{padding:10px 30px;background:#e94560;color:#fff;border:none;border-radius:5px;cursor:pointer}
+#err{color:#e94560;margin-top:10px}
+</style>
+</head>
+<body>
+<div id="lg" style="padding:40px;text-align:center">
+<h2 style="margin-bottom:20px">阴影纪元</h2>
+<p>输入密码访问</p>
+<input id="pwd" type="password" placeholder="密码">
+<button id="btn">进入阅读</button>
+<p id="err" style="display:none">密码错误</p>
+</div>
+<div id="hdr" style="display:none;justify-content:space-between;align-items:center">
+<h1>阴影纪元</h1>
+<button onclick="showList()">目录</button>
+</div>
+<div id="ct" style="display:none"></div>
+<div id="bnav" style="display:none;justify-content:center;gap:20px;padding:15px;background:#16213e">
+<button id="pb">上一章</button>
+<button id="nx">下一章</button>
+</div>
+<div id="lst" style="display:none;padding:20px;max-width:600px;margin:0 auto">
+<h2 style="margin-bottom:15px;text-align:center">目录</h2>
+<div id="lstx"></div>
+</div>
+<script src="chapters.js"></script>
+<script>
+var cur=1;
+var d=document;
+function init(){
+  if(typeof chapters === 'undefined'){
+    d.getElementById('lstx').innerHTML='<p style="color:#e94560;text-align:center">加载章节失败，请刷新页面</p>';
+    return;
+  }
+  chapters.sort(function(a,b){return a.n-b.n});
+  d.getElementById('lstx').innerHTML=chapters.map(function(c){
+    return '<div class="ch" onclick="load('+c.n+')">'+c.t+'</div>';
+  }).join('');
+}
+function load(n){
+  cur=n;
+  var c=chapters.find(function(x){return x.n===n});
+  if(!c)return;
+  d.getElementById('ct').innerHTML='<h3>'+c.t+'</h3>'+(c.c||'').split('\n').map(function(p){return p.trim()?'<p>'+p.trim().replace(/\"/g,'&quot;')+'</p>':''}).join('');
+  d.getElementById('ct').style.display='block';
+  d.getElementById('lst').style.display='none';
+  d.getElementById('bnav').style.display='flex';
+  d.getElementById('pb').disabled=cur<=1;
+  d.getElementById('nx').disabled=cur>=chapters.length;
+}
+function showList(){
+  d.getElementById('ct').style.display='none';
+  d.getElementById('bnav').style.display='none';
+  d.getElementById('lst').style.display='block';
+}
+function prev(){if(cur>1)load(cur-1)}
+function next(){if(cur<chapters.length)load(cur+1)}
+d.getElementById('btn').onclick=function(){
+  if(d.getElementById('pwd').value==='shadow2026'){
+    d.getElementById('lg').style.display='none';
+    d.getElementById('hdr').style.display='flex';
+    init();
+  }else{
+    d.getElementById('err').style.display='block';
+  }
+};
+if(localStorage.getItem('a')==='shadow2026'){
+  d.getElementById('lg').style.display='none';
+  d.getElementById('hdr').style.display='flex';
+  init();
+}
+d.getElementById('pb').onclick=prev;
+d.getElementById('nx').onclick=next;
+</script>
+</body>
+</html>
