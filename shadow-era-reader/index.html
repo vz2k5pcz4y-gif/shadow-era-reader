@@ -10,18 +10,17 @@ body{font-family:"Microsoft YaHei",sans-serif;background:#1a1a2e;color:#eee;min-
 #hdr{display:none;padding:15px;background:#16213e;justify-content:space-between;align-items:center;border-bottom:1px solid #0f3460}
 #hdr h1{font-size:1.3rem;color:#e94560}
 #hdr button{background:#e94560;color:#fff;border:none;padding:8px 15px;border-radius:5px;cursor:pointer}
-#ct{padding:20px;max-width:800px;margin:0 auto;display:none;line-height:1.8}
+#ct{padding:20px;max-width:800px;margin:0 auto;display:none;line-height:1.8;font-size:15px}
 #ct h3{color:#e94560;font-size:1.5rem;margin-bottom:15px;text-align:center}
 #ct p{text-indent:2em;margin-bottom:12px}
 #bnav{display:none;justify-content:center;gap:20px;padding:15px;background:#16213e}
 #bnav button{background:#0f3460;color:#fff;border:none;padding:10px 25px;border-radius:5px;cursor:pointer}
 #bnav button:disabled{opacity:0.5;cursor:not-allowed}
-#lst{display:none;padding:20px;max-width:600px;margin:0 auto}
+#lst{padding:20px;max-width:600px;margin:0 auto;display:none;overflow-y:auto;max-height:80vh}
 .ch{padding:12px;margin:5px 0;background:#16213e;border-radius:8px;cursor:pointer;transition:background 0.2s}
 .ch:hover{background:#0f3460}
 #pwd{width:80%;padding:10px;margin:10px 0;border-radius:5px;border:1px solid #0f3460;background:#16213e;color:#fff}
 #btn{padding:10px 30px;background:#e94560;color:#fff;border:none;border-radius:5px;cursor:pointer}
-#err{color:#e94560;margin-top:10px}
 </style>
 </head>
 <body>
@@ -30,7 +29,7 @@ body{font-family:"Microsoft YaHei",sans-serif;background:#1a1a2e;color:#eee;min-
 <p>输入密码访问</p>
 <input id="pwd" type="password" placeholder="密码">
 <button id="btn">进入阅读</button>
-<p id="err" style="display:none">密码错误</p>
+<p id="err" style="display:none;color:#e94560">密码错误</p>
 </div>
 <div id="hdr" style="display:none;justify-content:space-between;align-items:center">
 <h1>阴影纪元</h1>
@@ -56,14 +55,21 @@ function init(){
   }
   chapters.sort(function(a,b){return a.n-b.n});
   d.getElementById('lstx').innerHTML=chapters.map(function(c){
-    return '<div class="ch" onclick="load('+c.n+')">'+c.t+'</div>';
+    return '<div class="ch" onclick="load('+c.n+')">第'+c.n+'章 - '+c.t+'</div>';
   }).join('');
 }
 function load(n){
   cur=n;
   var c=chapters.find(function(x){return x.n===n});
   if(!c)return;
-  d.getElementById('ct').innerHTML='<h3>'+c.t+'</h3>'+(c.c||'').split('\n').map(function(p){return p.trim()?'<p>'+p.trim().replace(/"/g,'&quot;')+'</p>':''}).join('');
+  var content=c.c||'';
+  var paragraphs=content.split('\n').filter(function(p){return p.trim()});
+  var html='<h3>'+c.t+'</h3>';
+  paragraphs.forEach(function(p){
+    var trimmed=p.trim();
+    if(trimmed)html+='<p>'+trimmed.replace(/"/g,'&quot;')+'</p>';
+  });
+  d.getElementById('ct').innerHTML=html;
   d.getElementById('ct').style.display='block';
   d.getElementById('lst').style.display='none';
   d.getElementById('bnav').style.display='flex';
@@ -87,7 +93,7 @@ d.getElementById('btn').onclick=function(){
   }
 };
 try{
-  if(localStorage.getItem('a')==='shadow2026'){
+  if(localStorage.getItem('shadowera_auth')==='shadow2026'){
     d.getElementById('lg').style.display='none';
     d.getElementById('hdr').style.display='flex';
     init();
